@@ -1,8 +1,7 @@
 import cv2
 import numpy as np
-
-img = cv2.imread('gerald.jpeg',0)
-
+from matplotlib import pyplot as plt
+# O = (i/255)^gamma
 
 def gamma_transformation(img, gamma):
     '''
@@ -11,7 +10,7 @@ def gamma_transformation(img, gamma):
     :param gamma: a int gama
     :return: a image with the transformation applied
     '''
-    img_transformed = np.power(img, gamma)
+    img_transformed = np.power(img/255, gamma)
     return img_transformed
 
 def logaritimic_transformation(img, thresh, px):
@@ -23,19 +22,41 @@ def logaritimic_transformation(img, thresh, px):
 def negative_transformation(img,sub):
 
     return sub - img
+def histogram_color(img):
+
+    color = ('b', 'g', 'r')
+
+    for i, col in enumerate(color):
+
+        histr = cv2.calcHist([img], [i], None, [256], [0, 256])
+        plt.plot(histr, color=col)
+        plt.xlim([0, 256])
+    plt.show()
+def histogram_bw(img):
+    plt.hist(img.ravel(), 256, [0, 256])
+    plt.show()
 
 
-img_1 = negative_transformation(img , 255)
-img_2 = gamma_transformation(img, 200)
-img_3 = logaritimic_transformation(img, 3, 255)
+img = cv2.imread('image.jpeg', 0)
+img_color = cv2.imread('image.jpeg')
+img_2 = gamma_transformation(img, 0.5)
+img_1 = negative_transformation(img, 255)
+
 cv2.imshow('input', img)
 cv2.imshow('negative', img_1)
-cv2.imshow('logaritimic', img_3)
 cv2.imshow('gamma', img_2)
 
 
 
+#histogram(img_2)
 
+#img_3 = logaritimic_transformation(img, 3, 255)
+#cv2.imshow('logaritimic', img_3)
+
+# plt.subplot(img.ravel(), 256, [0, 256])
+# plt.subplot(221), plt.imshow(img, 'gray')
+# plt.subplot(img.ravel(), 256, [0, 256])
+# plt.show()
 cv2.waitKey(100000)
 cv2.destroyAllWindows()
 
