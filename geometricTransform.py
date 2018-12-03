@@ -13,15 +13,24 @@ def gamma_transformation(img, gamma):
     img_transformed = np.power(img/255, gamma)
     return img_transformed
 
-def logaritimic_transformation(img, thresh, px):
-    #normalized_image = cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
-    image_log = np.uint8(np.log1p(img))
-    img_transformed = cv2.threshold(image_log, thresh, px, cv2.THRESH_BINARY)[1]
-    return img_transformed
+def logaritimic_transformation(img, c):
+    new_image = []
+
+    for element in img:
+        pixels = []
+
+        for pixel in element:
+
+            pixel = c*(np.log(1 + pixel))
+            pixels.append(pixel)
+        new_image.append(pixels)
+    new_image = np.array(new_image)
+    return new_image
 
 def negative_transformation(img,sub):
 
     return sub - img
+
 def histogram_color(img):
 
     color = ('b', 'g', 'r')
@@ -32,6 +41,7 @@ def histogram_color(img):
         plt.plot(histr, color=col)
         plt.xlim([0, 256])
     plt.show()
+
 def histogram_bw(img):
     plt.hist(img.ravel(), 256, [0, 256])
     plt.show()
@@ -41,17 +51,17 @@ img = cv2.imread('image.jpeg', 0)
 img_color = cv2.imread('image.jpeg')
 img_2 = gamma_transformation(img, 0.5)
 img_1 = negative_transformation(img, 255)
+img_3 = logaritimic_transformation(img, 0.2)
 
 cv2.imshow('input', img)
 cv2.imshow('negative', img_1)
 cv2.imshow('gamma', img_2)
-
+cv2.imshow('logaritimic', img_3)
 
 
 #histogram(img_2)
 
-#img_3 = logaritimic_transformation(img, 3, 255)
-#cv2.imshow('logaritimic', img_3)
+
 
 # plt.subplot(img.ravel(), 256, [0, 256])
 # plt.subplot(221), plt.imshow(img, 'gray')
